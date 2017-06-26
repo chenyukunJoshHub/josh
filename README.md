@@ -5,8 +5,10 @@
 >
 ### 浏览器
 >
+
     - 跨域
         > 同源
+        
         - jsonp
         - web socket
         - postMessage
@@ -14,10 +16,12 @@
         - proxy
     - Event Loop
         > 同步/异步
+
         - micro queue
         - macro queue
     -  网络
         > 三次握手/4次挥手/ tcp /tls/ssl证书
+
         - http
         - http2
         - https
@@ -35,6 +39,7 @@
 
 ### css
 >
+
     - Flex布局
     - 单位 rem/px/vw/vh/vmin/vmax
     - less
@@ -45,6 +50,7 @@
     - 边框 1px 问题
 ### js
 >
+
     - 数据类型
         - 基础类型 number string boolean null undefined symbol
         - 对象类型 function array  data  regExp
@@ -90,11 +96,11 @@
 
 
 ### 正则
-> 正则
 ![](http://images.cnitblog.com/blog/608782/201409/031430427829068.gif)
 
 ## 服务端
 >
+
 ### nodejs
 ### mongoDB
 ### pm2
@@ -106,16 +112,19 @@
 
 ## 优化
 >
+
 ### webpack
 ### rollup
 
 ## 常用工具
 >
+
 ### git
 
 
 ## 实战
 >
+
     - 小程序
     - weex
     - html5电商
