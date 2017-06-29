@@ -359,6 +359,7 @@ console.log(sayHiuncurrying({value:'world'},"hahaha"));
 - vue 构造函数 - observe - dep - watch
 - vue-router 原理
 - vuex 原理
+- 性能优化
 
 ## 实战
 - 小程序
