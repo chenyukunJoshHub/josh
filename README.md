@@ -332,7 +332,8 @@ console.log(sayHiuncurrying({value:'world'},"hahaha"));
     - 非对称加密
     - 哈希算法
     - 数字签名
-
+- 声明式编程/命令式编程
+- 解耦
 ### 正则
 ![](http://images.cnitblog.com/blog/608782/201409/031430427829068.gif)
 
@@ -354,12 +355,34 @@ console.log(sayHiuncurrying({value:'world'},"hahaha"));
 ### git
 ### 单元测试
 ### Three.js
+### JSX / JavaScript templating
 
 ## vue全家桶
 - vue 构造函数 - observe - dep - watch
 - vue-router 原理
-- vuex 原理
+<pre><code>
+1.hash与History interface两种方式实现前端路
+
+
+router.init() 根组件创建是调用
+-->
+Vue.mixin()  beforeCreate  安装 vue-router是 通过 Vue.mixin() 注册全局的 beforeCreate 生命钩子 保函事件监听
+-->
+hashchange  事件监听
+-->
+match route  触发路由更新 =》 地址匹配  对应当前地址的 route    设置到对应的 vm._route
+-->
+set vm._route  触发视图更新   对 vm._route 的赋值会被 Vue 拦截到，并且触发 Vue 组件的更新渲染流程
+-->
+<router-view> render()   视图编译
+-->
+render matched component
+
+</code></pre>
+- vuex 原理  Flux、Redux、MobX、Vuex 和 Rx.js（反正名字里都有一个 x）
 - 性能优化
+- 服务端渲染
+- view = render(state)
 
 ## 实战
 - 小程序
