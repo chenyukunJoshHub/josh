@@ -5,7 +5,6 @@
 >
 ### 浏览器
 >
-
 * 跨域
     > 同源
     - jsonp
@@ -25,7 +24,7 @@
 * 网络
     > 三次握手/4次挥手/ tcp /tls/ssl证书
     - http
-    - http2
+    - http2  二进制/HPACK头部压缩/server Push /多路由复用/优先级/Frame
     - https
     - 状态码
     - CSRF和XSS
@@ -46,7 +45,6 @@
 
 ### css
 >
-
 - Flex布局
 - 单位 rem/px/vw/vh/vmin/vmax
 - less
@@ -65,7 +63,6 @@
     - 自适应设计（一套代码，多种设备）
 ### js
 >
-
 - 数据类型
     - 基础类型 number string boolean null undefined symbol
     - 对象类型 function array  data  regExp
@@ -192,11 +189,34 @@
     - String.prototype.link(http) 创建A标签 href = http
     - String.prototype.bold()
 - Function
-    - apply/call/toString/bind/isGenerator/toSource
+    - apply/call/toString/bind(柯里化)/isGenerator/toSource
+<pre><code>
+//bind() 方法 原理   柯里化
+Function.prototype.testBind = function (scope) {
+    var fn = this;     //保存原函数  构造属性    //* this 指向的是调用testBind方法的 bar函数
+    return function () {  //// 返回一个新函数
+        return fn.apply(scope, arguments);
+    }
+};
+var foo = {x: "Foo "};
+var bar = function (str) {
+    console.log(this.x+(arguments.length===0?'':str));
+};
+bar();                                   // undefined
+var testBindBar = bar.testBind(foo);     // 绑定 foo
+testBindBar("Bar!");
+
+//bind() 方法 权威指南
+var g = f.bind(this,1,2)  //柯里化 return 一个新的函数
+g(3)  ===  f.call(this, 1,2,3) 等价于
+</code></pre>
 - 闭包 (垃圾回收机制)
     - 公有/私有
     - 作用域
     - 内存蟹肉 // 最常使用的方法叫做"引用计数"（reference counting）：语言引擎有一张"引用表"，保存了内存里面所有的资源（通常是各种值）的引用次数。如果一个值的引用次数是0，就表示这个值不再用到了，因此可以将这块内存释放。
+        - 意外的全局变量
+        - 没有清理的DOM元素引用（dom元素被清除）
+        - 闭包
 - 函数声明（变量声明提升机制）/函数表达式/立即执行函数表达式
 - arguments  [].slice.apply(arguments)
 - this指向/new
@@ -222,6 +242,76 @@
     - each 获取没重复的最右一值放入新数组
 - 作用域
 - 柯里化和反柯里化
+    - 函数可以作为参数传递
+    - 函数能够作为函数的返回值
+    - 依赖闭包
+    - 延迟执行
+<pre><code>
+//** 用闭包的机制 实现延迟执行，链式调用
+var adder = function () {
+    var _args = [];
+    return function () {
+        if (arguments.length === 0) {
+            return _args.reduce(function (a, b) {
+                return a + b;
+            });
+        }
+        [].push.apply(_args, [].slice.call(arguments));
+        return arguments.callee;
+    }
+};
+var sum = adder();
+console.log(sum);     // Function
+sum(100,200)(300);    // 调用形式灵活，一次调用可输入一个或者多个参数，并且支持链式调用
+sum(400);
+console.log(sum());   // 1000 （加总计算）
+
+//---------------
+ar addEvent = (function(){
+    if (window.addEventListener) {
+        return function(el, sType, fn, capture) {
+            el.addEventListener(sType, function(e) {
+                fn.call(el, e);
+            }, (capture));
+        };
+    } else if (window.attachEvent) {
+        return function(el, sType, fn, capture) {
+            el.attachEvent("on" + sType, function(e) {
+                fn.call(el, e);
+            });
+        };
+    }
+})(); //第一次 if...else... 判断之后，完成了部分计算，动态创建新的函数来处理后面传入的参数，这是一个典型的柯里化。
+
+</code></pre>
+<pre><code>
+//反柯里化  创建个方法- 调用原生的方法 - 实现与原生的方法相同的功能
+var uncurrying= function (fn) {
+    return function () {
+        //var args=[].slice.call(arguments,1);
+        //return fn.apply(arguments[0],args);
+        let [that, ...args] = [].slice.call(arguments);
+        return fn.apply(that, args)
+}
+var test="a,b,c";
+console.log(test.split(","));
+var split=uncurrying(String.prototype.split);
+console.log(split(test,','));                   //[ 'a', 'b', 'c' ]
+
+// ---
+Function.prototype.uncurrying = function() {
+    var that = this;
+    return function() {
+        return Function.prototype.call.apply(that, arguments);
+    }
+};
+function sayHi () {
+    return "Hello " + this.value +" "+[].slice.call(arguments);
+}
+var sayHiuncurrying=sayHi.uncurrying();
+console.log(sayHiuncurrying({value:'world'},"hahaha"));
+
+</code></pre>
 - javascript面向对象-创建
     - class  类声明(不会声明提升)/类表达式
     - 工厂模式  / return Object   缺点是无法识别对象类型
@@ -229,10 +319,13 @@
     - 原型模式  /原型属性（共享）
     - 构造函数和原型模式结合  /构造属性(独立)、原型属性（共享）
 - javascript面向对象-继承
-    - extends（先创造父类的实例对象this，子类修改this，放回子类实列）  static(不能被实列调用)  super（构造函数中super() => Parent.prototype.constructor.call(this) ）  Species  Object.setPrototypeOf
+    - extends（先创造父类的实例对象this，子类修改this，this指向子类实列）  static(不能被实列调用)  super（构造函数中super() => Parent.prototype.constructor.call(this) ）  Species  Object.setPrototypeOf（设置原型链）
+        - sub.prototype = obeject.create(Parent.prototype)
+        - 默认构造属性  sub.prototype.constructor ==> Parent.prototype.constructor.call(this)
+        - super(a,b) = 》 Parent.prototype.constructor.call(this,arguments)
     - 原型链继承  / 是将父类的实例作为子类的原型  \可以继承父类 构造属性和原型属性
-    - 构造继承  / call/apply(this)  只能继承父类的实例属性和方法，不能继承原型属性/方法, 子类之间不共享
-    - 实列继承 / 工厂模式创建子类
+    - 构造继承  / Parent.call/apply(this)  只能继承父类的实例属性和方法，不能继承原型属性/方法, 子类之间不共享
+    - 实列继承 / 工厂模式创建子类    \可以继承父类 构造属性和原型属性
     - 组合继承   /构造继承 + 原型继承  调用了两次父类构造函数
 - 加密
     - 对称加密
@@ -252,16 +345,17 @@
 ### scp
 ### docker
 
-
 ## 优化
 ### webpack
 ### rollup
+
+
 ## 常用工具
 ### git
 ### 单元测试
 ### Three.js
 
-##vue + vue-router + vuex
+## vue全家桶
 - vue 构造函数 - observe - dep - watch
 - vue-router 原理
 - vuex 原理
