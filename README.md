@@ -33,16 +33,31 @@
         - 服务端缓存
         - 客户端缓存
 * sessionStorage/localStorage/cooks
+    - localStorage 同源的文档间共享同样的localStorage数据。
+    - sessionStorage 的作用域同样是限定在文档源中，不过它被限定在窗口中。也就是说，如果同源的文档在不同的浏览器标签页中，那它们互相之间拥有的是各自的sessionStorage数据，无法共享。
 * HTML5 兼容/内核差异化
 * 标签语义化
 * History对象
 * Navigator对象
-* userAgent
 * Screen对象
 * window对象
+* html5
 * canvas
+* userAgent
 * 进制
-
+* BOM / stripBOM
+* 数据类型  Int8 / Uint8 /Uint8C/ Int16/Uint16/Int32/Uint32 （int:带符号整数，Uint：不带符号整数）  /Float32/Float64（浮点数）
+* 二进制数组种类
+    - ArrayBuffer对象  //代表储存二进制数据的一段内存, 不能直接读写，只能通过视图
+    - TypedArray视图
+    - DataView视图
+* 操作二进制数据  /满足 JavaScript 与显卡之间大量的、实时的数据交换，它们之间的数据通信必须是二进制的
+    - File API
+    - XMLHttpRequest
+    - Fetch API
+    - Canvas
+    - WebSockets
+* WebGL
 ### css
 >
 - Flex布局
@@ -53,6 +68,7 @@
 - 媒体查询
 - 小程序的WXSS
 - 边框 1px 问题
+- PostCSS
 - 多设备设计
     - 最小固定宽度布局
     - 百分比布局
@@ -73,6 +89,13 @@
     -  [5] == [5]   {} == {}  //false
     -  +0 === -0  false
 - json/xml
+- let/const/var
+    - 块级作用域 / {}代码块内有效
+    - 没有变量提示，顶部定义
+    - 不能重复声明
+    - 暂时性死区
+    - const 只能保证变量名指向的地址不变，并不能保证该地址的数据不变
+    - const 立即执行，初始化就需要赋值
 - 运算符
     - 算数运算符
     - ++  --
@@ -80,11 +103,69 @@
     - 对象运算符
     - 逻辑运算符
     - 位运算法
-    - typeof/void/?:
+    - typeof/void/?:    typeof =》“number”、“string”、“boolean”、“object”、"symbol"、“function”和“undefined”。
 - ES6
-    -
+    - let/const
+    - 解构 （undefined会触发默认值）
+        - 数组
+        - 对象  变量必须与属性同名 /   let { log, sin, cos } = Math;
+        - 字符串  let {length : len} = 'hello'; len //5
+        - 数值和布尔值  先转为对象  let {toString: s} = 123;
+        - 函数参数
+    - Iterator接口  / 数组、某些类似数组的对象、Set和Map结构
+    - ... 返回数组[]
+        - 合并数组
+        - 与解构赋值结合
+        - 函数的返回值
+        - 字符串 => array
+        - 实现了Iterator接口的对象
+        - Map和Set结构，Generator函数
+
+        - ...参数  取参  取代 arguments
+        - f(...args)  传参  /替代数组的apply方法
+    - 箭头函数 / 箭头函数没有自己的this，都只指向外层函数
+    - 尾递归
+    - 属性名表达式
+    - set  类似于数组  Set 结构不会添加重复的值   [...new Set(array)]去重复
+        - size
+        - add(value)
+        - delete(value)
+        - has(value)
+        - clear()
+        - keys()
+        - values()
+        - entries()
+        - forEach()
+    - map 类似于对象  “值—值”和 键 - 值 都可以   [[1,'one'], [2, 'two'], [3, 'three']]
+    - Proxy
+    - Reflect
+    - Generator 函数
+    - Decorator 修饰符
+<pre><code>
+function* helloWorldGenerator() {
+  yield 'hello';  //yield 暂停执行的标记
+  yield 'world';
+  return 'ending';
+}
+
+var hw = helloWorldGenerator();
+
+hw.next()  //next方法可以恢复执行
+// { value: 'hello', done: false }  done:false 表示遍历还没有结束。
+
+hw.next()
+// { value: 'world', done: false }
+
+hw.next()
+// { value: 'ending', done: true }
+
+hw.next()
+// { value: undefined, done: true }
+</code></pre>
+
 - 原生DOM操作
-- cmd/amd/ export-import   /依赖 amd中需要执行完毕（依赖前置的），cmd中只需要文件加载完毕（延迟执行）
+- cmd/amd/ export-import   /依赖 
+- amd（预执行）依赖模块都是先执行，需要执行完毕（依赖前置的），cmd（懒执行）中只需要文件加载完毕（延迟执行）
 - 遍历
     - some/every
     - map
@@ -93,6 +174,7 @@
     - filter
     - for  let/var的区别
     - for - in
+    - for - of
     - object.getOwnPropertyNames
     - object.getOwnPropertySymbols
     - while(do ~ while)
@@ -107,6 +189,7 @@
     - instanceof
     - object.is(v1,v2)   ===
     - Array.is()
+    - Array.isArray(value)   Object.prototype.toString.call( obj )
     - "name" in object //true  构造对象/原型对象
 - Array/多维数组
     - indexOf()
@@ -119,11 +202,19 @@
     - find()
     - findIndex()
     - includes()  数组/字符串
+    - split(xxx,length)
     - slice(begin, end)
     - splice(0,1)
     - concat() 合并
     - replace("","")
     - call/apply
+    - join()
+    - form()  //任何有length属性的对象
+    - of()
+    - copyWithin
+    - values()
+    - fill(value, startindex, endindex)
+    - toSource()
 - object
     - object.create()
     - object.assign() 去重复浅合并
@@ -210,7 +301,8 @@ testBindBar("Bar!");
 var g = f.bind(this,1,2)  //柯里化 return 一个新的函数
 g(3)  ===  f.call(this, 1,2,3) 等价于
 </code></pre>
-- 闭包 (垃圾回收机制)
+- 闭包 (垃圾回收机制) 闭包是在一个函数里声明了另外一个函数，并且这个函数访问了父函数作用域里的变量。
+    - 封装 (function() { //这里是块级作用域 })();
     - 公有/私有
     - 作用域
     - 内存蟹肉 // 最常使用的方法叫做"引用计数"（reference counting）：语言引擎有一张"引用表"，保存了内存里面所有的资源（通常是各种值）的引用次数。如果一个值的引用次数是0，就表示这个值不再用到了，因此可以将这块内存释放。
@@ -240,8 +332,9 @@ g(3)  ===  f.call(this, 1,2,3) 等价于
     - indexOf 根据 indexOf 获取 i 比较
     - sort 先排序，左右对比
     - each 获取没重复的最右一值放入新数组
+- 二叉查找树
 - 作用域
-- 柯里化和反柯里化
+- 柯里化和反柯里化  //将多参数的函数转换成单参数的形式 （固定某些参数） 只传递给函数一部分参数来调用它，让它返回一个函数去处理剩下的参数。
     - 函数可以作为参数传递
     - 函数能够作为函数的返回值
     - 依赖闭包
@@ -334,21 +427,60 @@ console.log(sayHiuncurrying({value:'world'},"hahaha"));
     - 数字签名
 - 声明式编程/命令式编程
 - 解耦
+- Generator 函数
+- 数组的空位
+- 封装
+- 底层实现（ES、VO、AO）
+- gitbook
+
+
 ### 正则
+- $& 指代匹配的子字符串。 /$` 指代匹配结果前面的文本。/$' 指代匹配结果后面的文本。/$n 指代匹配成功的第n组内容，n是从1开始的自然数。/$$ 指代美元符号$。
+-  search()：按照给定的正则表达式进行搜索，返回一个整数，表示第一个与之匹配的字符串的起始位置，如果找不到匹配的子串，将返回-1。
+- match()：返回一个数组，成员是所有匹配的子字符串。
+- replace()：按照给定的正则表达式进行替换，返回替换后的字符串。
+- split()：按照给定规则进行字符串分割，返回一个数组，包含分割后的各个成员。
+- test()
+- exec()
 ![](http://images.cnitblog.com/blog/608782/201409/031430427829068.gif)
 
 ## 服务端
 ### nodejs
+    - 异步并发控制 async.parallelLimit([Function,Function],number,Function)
+    - async.queue() async.drain()  async.push  异步并发控制
 ### mongoDB
 ### pm2
 ### shell
 ### nginx
 ### scp
 ### docker
+### dns
+### CDN 缓存
+### JSBridge  桥协议
+- 暴露 window.JSBridge 对象
+- 安卓 webView.loadUrl("javascript:JSBridge.trigger('webviewReady')"); / ios  webview.stringByEvaluatingJavaScriptFromString("JSBridge.trigger('webviewReady'")
+- javascript调用native方式  ios =》 创建iframe，插入body， url = jsbridge://方法名?key=value
+<pre><code>
+var url = 'jsbridge://doAction?title=分享标题&desc=分享描述&link=http%3A%2F%2Fwww.baidu.com';
+var iframe = document.createElement('iframe');
+iframe.style.width = '1px';
+iframe.style.height = '1px';
+iframe.style.display = 'none';
+iframe.src = url;
+document.body.appendChild(iframe);
+setTimeout(function() {
+    iframe.remove();
+}, 100);
+</code><pre>
+- javascript调用native方式 安卓
+    - 1.通过schema方式，使用shouldOverrideUrlLoading方法对url协议进行解析。这种js的调用方式与ios的一样，使用iframe来调用native代码。
+    - 2.通过在webview页面里直接注入原生js代码方式，使用addJavascriptInterface方法来实现。
+    -
 
 ## 优化
-### webpack
-### rollup
+### 服务端 http2.0 nginx dns + 静态资源（压缩，图片合并，js） + 本地缓存
+### webpack //3.0作用域   happypack / webpack-parallel-uglify-plugin
+### rollup  //Tree Shaking
 
 
 ## 常用工具
@@ -356,13 +488,17 @@ console.log(sayHiuncurrying({value:'world'},"hahaha"));
 ### 单元测试
 ### Three.js
 ### JSX / JavaScript templating
+### ESLint  //语法规则和代码风格
+### Flow & TypeScript
+### AST
+### npm scripts
 
 ## vue全家桶
 - vue 构造函数 - observe - dep - watch
-- vue-router 原理
+- vue-router/axios 原理
+
 <pre><code>
 1.hash与History interface两种方式实现前端路
-
 
 router.init() 根组件创建是调用
 -->
@@ -377,8 +513,8 @@ set vm._route  触发视图更新   对 vm._route 的赋值会被 Vue 拦截到�
 <router-view> render()   视图编译
 -->
 render matched component
-
 </code></pre>
+
 - vuex 原理  Flux、Redux、MobX、Vuex 和 Rx.js（反正名字里都有一个 x）
 - 性能优化
 - 服务端渲染
@@ -389,3 +525,11 @@ render matched component
 - weex
 - html5电商(vue全家桶) + node +  mongoDB
 - 微信公众号 api
+
+
+>总结：思路很重要 =》 遇到问题难点，先理解本质的需求点，理清开始跟结束之间逐步链接的一个过程（项目经验）  =》 针对需求点/过程做一个考评，你想做成什么样，做简单点/灵活点/复杂点
+       =》 想好做成什么样，根据不同的样子，你怎么做，检索脑中的知识点（这里就是考验知识储备，基础理解） = 》 完成
+
+       列：字符串 =》 字  符  串  =》 string - array - string  =》 简单点/复杂点  => （string - array = .split('') array - string = join(" ")）/for循环 Array.split.call(string)  =》完成
+
+
