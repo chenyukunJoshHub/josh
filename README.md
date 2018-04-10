@@ -8,7 +8,7 @@
 * 跨域
     > 同源
     - jsonp
-    - web socket
+    - webSocket
     - postMessage
     - cors
     - proxy
